@@ -15,6 +15,7 @@ import com.karumi.domain.model.SuperHero
 import com.karumi.ui.view.SuperHeroDetailActivity
 import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,17 +31,24 @@ class SuperHeroDetailActivityTest : AcceptanceTest<SuperHeroDetailActivity>(Supe
     override fun setup() {
         super.setup()
         whenever(repository.getByName(NAME)).thenReturn(SUPER_HERO)
-        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
     }
 
     @Test
     fun verifyNameOfSuperHeroShown() {
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
         onView(allOf(withId(R.id.tv_super_hero_name), withText(NAME))).check(matches(isDisplayed()))
     }
 
     @Test
     fun verifyDetailOfSuperHeroShown() {
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
         onView(allOf(withId(R.id.tv_super_hero_description), withText(DESCRIPTION))).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyIfTheSuperHeroIsAvengerThenAvengerIsShown() {
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
+        onView(withId(R.id.iv_avengers_badge)).check(matches(isDisplayed()))
     }
 
 
