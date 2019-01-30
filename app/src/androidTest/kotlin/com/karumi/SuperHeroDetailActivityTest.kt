@@ -12,6 +12,7 @@ import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
 import com.karumi.domain.model.SuperHero
+import com.karumi.matchers.ToolbarMatcher.onToolbarWithTitle
 import com.karumi.ui.view.SuperHeroDetailActivity
 import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.Matchers.allOf
@@ -56,6 +57,13 @@ class SuperHeroDetailActivityTest : AcceptanceTest<SuperHeroDetailActivity>(Supe
         whenever(repository.getByName(NAME)).thenReturn(SuperHero(name = NAME, description = DESCRIPTION, isAvenger = false, photo = PHOTO))
         startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
         onView(withId(R.id.iv_avengers_badge)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun verifyTheTitleNameIsShown() {
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
+
+        onToolbarWithTitle(NAME).check(matches(isDisplayed()))
     }
 
 
