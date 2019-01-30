@@ -24,7 +24,7 @@ abstract class AcceptanceTest<T : Activity>(clazz: Class<T>) {
     val testRule: IntentsTestRule<T> = IntentsTestRule(clazz, true, false)
 
     @Before
-    fun setup() {
+    open fun setup() {
         MockitoAnnotations.initMocks(this)
         Dispatchers.resetMain()
         val app = InstrumentationRegistry.getInstrumentation().targetContext.asApp()
