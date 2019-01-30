@@ -30,13 +30,17 @@ class SuperHeroDetailActivityTest : AcceptanceTest<SuperHeroDetailActivity>(Supe
     override fun setup() {
         super.setup()
         whenever(repository.getByName(NAME)).thenReturn(SUPER_HERO)
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
     }
 
     @Test
     fun verifyNameOfSuperHeroShown() {
-        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
-
         onView(allOf(withId(R.id.tv_super_hero_name), withText(NAME))).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyDetailOfSuperHeroShown() {
+        onView(allOf(withId(R.id.tv_super_hero_description), withText(DESCRIPTION))).check(matches(isDisplayed()))
     }
 
 
