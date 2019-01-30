@@ -1,7 +1,12 @@
 package com.karumi
 
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import android.support.test.espresso.intent.Intents.intended
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.hasDescendant
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -9,6 +14,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
+import android.support.v7.widget.RecyclerView
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
@@ -16,6 +22,7 @@ import com.karumi.data.repository.SuperHeroRepository
 import com.karumi.domain.model.SuperHero
 import com.karumi.recyclerview.RecyclerViewInteraction
 import com.karumi.ui.view.MainActivity
+import com.karumi.ui.view.SuperHeroDetailActivity
 import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -71,6 +78,21 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
                 matches(hasDescendant(allOf(withId(R.id.iv_avengers_badge), withEffectiveVisibility(ViewMatchers.Visibility.GONE))))
                     .check(view, exception)
             }
+    }
+
+    @Test
+    fun validateNavigatingToDetailsActivity() {
+        val superHeroList = givenAnAvengerSuperHero()
+        val superHero = superHeroList[0]
+        whenever(repository.getByName(superHero.name)).thenReturn(superHero)
+
+        startActivity()
+
+        onView(withId(R.id.recycler_view)).perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+
+
+        intended(hasComponent(SuperHeroDetailActivity::class.java.canonicalName))
+        intended(hasExtra(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, superHero.name))
     }
 
     private fun givenThereAreNoSuperHeroes() {
