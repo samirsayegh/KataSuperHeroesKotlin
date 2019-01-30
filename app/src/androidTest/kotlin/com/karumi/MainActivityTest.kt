@@ -3,14 +3,17 @@ package com.karumi
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
 import com.karumi.data.repository.SuperHeroRepository
+import com.karumi.domain.model.SuperHero
 import com.karumi.ui.view.MainActivity
 import com.nhaarman.mockitokotlin2.whenever
+import org.hamcrest.Matchers.not
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -40,6 +43,15 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 //        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
 //    }
 
+
+    @Test
+    fun validateProgressBarHiddenWithNoSuperHeroes() {
+        givenThereAreNoSuperHeroes()
+
+        startActivity()
+
+        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
+    }
 
 
     @Test
