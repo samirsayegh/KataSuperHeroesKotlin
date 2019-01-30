@@ -71,6 +71,13 @@ class SuperHeroDetailActivityTest : AcceptanceTest<SuperHeroDetailActivity>(Supe
         onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
     }
 
+    @Test
+    fun verifyWhenSuperHeroIsNotFoundNotFoundIsShown() {
+        whenever(repository.getByName(NAME)).thenReturn(null)
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
+        onView(withId(R.id.super_hero_not_found)).check(matches(isDisplayed()))
+    }
+
     override val testDependencies = Kodein.Module(allowSilentOverride = true) {
         bind<SuperHeroRepository>() with instance(repository)
     }

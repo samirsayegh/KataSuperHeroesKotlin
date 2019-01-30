@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.github.salomonbrys.kodein.Kodein.Module
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
@@ -54,6 +56,11 @@ class SuperHeroDetailActivity : BaseActivity(), SuperHeroDetailPresenter.View {
         tv_super_hero_description.text = superHero.description
         iv_avengers_badge.visibility = if (superHero.isAvenger) View.VISIBLE else View.GONE
         iv_super_hero_photo.setImageBackground(superHero.photo)
+    }
+
+    override fun showNotFound() {
+        recycler_view.visibility = GONE
+        super_hero_not_found.visibility = VISIBLE
     }
 
     override val activityModules = Module(allowSilentOverride = true) {
