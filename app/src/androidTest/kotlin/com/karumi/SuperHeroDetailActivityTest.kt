@@ -62,10 +62,14 @@ class SuperHeroDetailActivityTest : AcceptanceTest<SuperHeroDetailActivity>(Supe
     @Test
     fun verifyTheTitleNameIsShown() {
         startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
-
         onToolbarWithTitle(NAME).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun verifyProgressViewIsGone() {
+        startActivity(Bundle().apply { putString(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, NAME) })
+        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
+    }
 
     override val testDependencies = Kodein.Module(allowSilentOverride = true) {
         bind<SuperHeroRepository>() with instance(repository)
