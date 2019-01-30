@@ -30,8 +30,49 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()))
     }
 
+
+//    @Test
+//    fun validateProgressBarIsShownAndHidden() {
+//        givenThereAreNoSuperHeroes()
+//
+//        startActivity()
+//
+//        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
+//    }
+
+
+
+    @Test
+    fun validateProgressBarHiddenWithTwoSuperHeroes() {
+        givenThereAreTwoSuperHeroes()
+
+        startActivity()
+
+        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.tv_empty_case)).check(matches(not(isDisplayed())))
+    }
+
     private fun givenThereAreNoSuperHeroes() {
         whenever(repository.getAllSuperHeroes()).thenReturn(emptyList())
+    }
+
+    private fun givenThereAreTwoSuperHeroes() {
+        whenever(repository.getAllSuperHeroes()).thenReturn(
+            listOf(
+                SuperHero(
+                    name = "Hero 1",
+                    description = "Description 1",
+                    isAvenger = true,
+                    photo = "photo1"
+                ),
+                SuperHero(
+                    name = "Hero 2",
+                    description = "Description 2",
+                    isAvenger = false,
+                    photo = "photo2"
+                )
+            )
+        )
     }
 
     override val testDependencies = Kodein.Module(allowSilentOverride = true) {
