@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.super_hero_detail_activity.*
 class SuperHeroDetailActivity : BaseActivity(), SuperHeroDetailPresenter.View {
 
     companion object {
-        private const val SUPER_HERO_NAME_KEY = "super_hero_name_key"
+        internal const val SUPER_HERO_NAME_KEY = "super_hero_name_key"
 
         fun open(activity: Activity, superHeroName: String) {
             val intent = Intent(activity, SuperHeroDetailActivity::class.java)
