@@ -1,5 +1,6 @@
 package com.karumi
 
+import android.accounts.NetworkErrorException
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -15,6 +16,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
+import arrow.core.Either
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
@@ -95,24 +97,35 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         intended(hasExtra(SuperHeroDetailActivity.SUPER_HERO_NAME_KEY, superHero.name))
     }
 
+    @Test
+    fun validateNetworkExceptionActivity() {
+        whenever(repository.getAllSuperHeroes()).thenReturn(Either.left(NetworkErrorException()))
+
+        startActivity()
+
+        onView(withId(R.id.tv_network_error_case)).check(matches((isDisplayed())))
+    }
+
     private fun givenThereAreNoSuperHeroes() {
-        whenever(repository.getAllSuperHeroes()).thenReturn(emptyList())
+        whenever(repository.getAllSuperHeroes()).thenReturn(Either.right(emptyList()))
     }
 
     private fun givenThereAreTwoSuperHeroes() {
         whenever(repository.getAllSuperHeroes()).thenReturn(
-            listOf(
-                SuperHero(
-                    name = "Hero 1",
-                    description = "Description 1",
-                    isAvenger = true,
-                    photo = "photo1"
-                ),
-                SuperHero(
-                    name = "Hero 2",
-                    description = "Description 2",
-                    isAvenger = false,
-                    photo = "photo2"
+            Either.right(
+                listOf(
+                    SuperHero(
+                        name = "Hero 1",
+                        description = "Description 1",
+                        isAvenger = true,
+                        photo = "photo1"
+                    ),
+                    SuperHero(
+                        name = "Hero 2",
+                        description = "Description 2",
+                        isAvenger = false,
+                        photo = "photo2"
+                    )
                 )
             )
         )
@@ -129,7 +142,7 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
                 )
             )
         ) {
-            whenever(repository.getAllSuperHeroes()).thenReturn(this)
+            whenever(repository.getAllSuperHeroes()).thenReturn(Either.right(this))
             return this
         }
     }

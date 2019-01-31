@@ -1,6 +1,8 @@
 package com.karumi.data.repository
 
+import android.accounts.NetworkErrorException
 import android.util.Log
+import arrow.core.Either
 import com.karumi.domain.model.SuperHero
 
 class SuperHeroRepository {
@@ -15,9 +17,10 @@ class SuperHeroRepository {
         superHeroes = fakeData()
     }
 
-    fun getAllSuperHeroes(): List<SuperHero> {
+    @Throws(NetworkErrorException::class)
+    fun getAllSuperHeroes(): Either<NetworkErrorException, List<SuperHero>> {
         waitABit()
-        return superHeroes
+        return Either.right(superHeroes)
     }
 
     fun getByName(name: String): SuperHero? {

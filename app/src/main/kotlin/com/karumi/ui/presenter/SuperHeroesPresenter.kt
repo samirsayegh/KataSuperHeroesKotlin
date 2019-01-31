@@ -34,10 +34,17 @@ class SuperHeroesPresenter(
     private fun refreshSuperHeroes() = launch {
         val result = async { getSuperHeroes() }
         view?.hideLoading()
-        when {
-            result.isEmpty() -> view?.showEmptyCase()
-            else -> view?.showSuperHeroes(result)
-        }
+        result.fold(
+            { view?.showNetworkError() },
+            {
+                when {
+                    it.isEmpty() -> view?.showEmptyCase()
+                    else -> view?.showSuperHeroes(it)
+                }
+            }
+        )
+
+
     }
 
     fun onSuperHeroClicked(superHero: SuperHero) = view?.openDetail(superHero.name)
@@ -48,5 +55,6 @@ class SuperHeroesPresenter(
         fun showLoading()
         fun showEmptyCase()
         fun openDetail(name: String)
+        fun showNetworkError()
     }
 }

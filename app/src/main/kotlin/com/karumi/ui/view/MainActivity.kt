@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.view.View.VISIBLE
 import com.github.salomonbrys.kodein.Kodein.Module
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
@@ -69,5 +70,9 @@ class MainActivity : BaseActivity(), SuperHeroesPresenter.View {
             )
         }
         bind<GetSuperHeroes>() with provider { GetSuperHeroes(instance()) }
+    }
+
+    override fun showNetworkError() {
+        tv_network_error_case.visibility = VISIBLE
     }
 }
